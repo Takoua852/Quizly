@@ -17,15 +17,21 @@ This project allows users to create quizzes from YouTube videos using AI-powered
 
 ```bash
 git clone <repository-url>
-
+```
+```bash
 cd <project-folder>
-
+```
+```bash
 python -m venv env
-
+```
+```bash
 source env/bin/activate  # Linux / macOS
-       env/Scripts/activate     # Windows
+```
+```bash
+source  env/Scripts/activate     # Windows    
+```
+```bash
 pip install -r requirements.txt
-
 ```
 
 ## Installation
