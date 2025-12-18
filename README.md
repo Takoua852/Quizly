@@ -1,6 +1,9 @@
+![alt text](assets/logoheader.png)
+
 # AI-Powered Quiz Generator
 
-![alt text](assets/logoheader.png)
+
+
 This project allows users to create quizzes from YouTube videos using AI-powered transcription and question generation.
 
 ## Features
