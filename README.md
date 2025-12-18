@@ -2,8 +2,6 @@
 
 # AI-Powered Quiz Generator
 
-
-
 This project allows users to create quizzes from YouTube videos using AI-powered transcription and question generation.
 
 ## Features
@@ -53,33 +51,39 @@ python manage.py runserver
 | `/api/quizzes/<id>/`  | GET, PUT, DELETE | Retrieve, update, delete a quiz    |
 
 ## Projekt Structure
+
+```
 auth_app/
 ├── api/
-│   ├── views.py
-│   ├── serializers.py
-│   ├── urls.py
-│   ├── permissions.py
-│   ├── authentication.py
+│ ├── views.py
+│ ├── serializers.py
+│ ├── urls.py
+│ ├── permissions.py
+│ ├── authentication.py
 ├── models.py
 ├── admin.py
 ├── ...
+
 core/
 ├── settings.py
 ├── urls.py
-├── admins.py
+├── admin.py
 ├── ...
+
 quiz_app/
 ├── api/
-│   ├── views.py
-│   ├── serializers.py
-│   ├── urls.py
-│   ├── permissions.py
+│ ├── views.py
+│ ├── serializers.py
+│ ├── urls.py
+│ ├── permissions.py
 ├── services/
-│   ├── youtube.py
-│   ├── transcription.py
-│   ├── gemini.py
-│   └── quiz_creator.py
+│ ├── youtube.py
+│ ├── transcription.py
+│ ├── gemini.py
+│ └── quiz_creator.py
 ├── utils.py
 ├── models.py
 ├── admin.py
 ├── ...
+
+````
