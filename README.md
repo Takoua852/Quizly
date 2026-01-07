@@ -46,15 +46,11 @@ pip install -r requirements.txt
 
 This project uses environment variables for sensitive configuration such as API keys.
 
-### `.env` file
+### Setup
 
-Create a `.env` file in the project root (same level as `manage.py`). This file is **not** committed to GitHub.
-
-```env
-GOOGLE_GENAI_API_KEY=your_api_key_here
-```
-
-The variables are automatically loaded using **python-dotenv** in `core/settings.py`.
+1. Copy the environment template:
+```bash
+cp .env.template .env
 
 ---
 
