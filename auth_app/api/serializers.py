@@ -13,6 +13,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from rest_framework.exceptions import AuthenticationFailed
 
 User = get_user_model()
 
@@ -99,12 +100,15 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            raise serializers.ValidationError(
-                {"detail": "No user found with this username."})
+            raise AuthenticationFailed("Invalid username or password")
+
         if not user.check_password(password):
-            raise serializers.ValidationError('Incorrect password')
+            raise AuthenticationFailed("Invalid username or password")
+
         data = super().validate({
-            'username': user.username,
-            'password': password
+            "username": user.username,
+            "password": password
         })
+
+        self.user = user
         return data

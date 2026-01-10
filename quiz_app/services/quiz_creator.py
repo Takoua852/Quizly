@@ -3,7 +3,7 @@ from quiz_app.utils import extract_video_id
 from .youtube import YouTubeService
 from .transcription import TranscriptionService
 from .gemini import GeminiQuizService
-
+from django.db import transaction
 
 class QuizCreator:
     """
@@ -52,12 +52,14 @@ class QuizCreator:
 
         clean_url = f"https://www.youtube.com/watch?v={video_id}"
 
-        quiz = Quiz.objects.create(
-            user=user,
-            title="Quiz wird erstellt...",
-            description="Transkription läuft...",
-            video_url=clean_url
-        )
+        with transaction.atomic():
+     
+            quiz = Quiz.objects.create(
+                user=user,
+                title="Quiz wird erstellt...",
+                description="Transkription läuft...",
+                video_url=clean_url
+            )
 
         audio, info = YouTubeService.download_audio(clean_url)
         transcript = TranscriptionService.transcribe(audio)

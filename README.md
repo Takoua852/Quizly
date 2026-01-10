@@ -1,28 +1,29 @@
-![alt text](assets/logoheader.png)
-
+![AI Quiz Generator](assets/logoheader.png)
 
 # AI-Powered Quiz Generator
 
-This project allows users to create quizzes from YouTube videos using AI-powered transcription and question generation.
+An AI-powered backend application that generates quizzes from YouTube videos by automatically transcribing audio and creating multiple-choice questions using large language models.
 
 ---
 
 ## Features
 
-* **User Authentication**: Registration, login, JWT stored in cookies, token refresh, logout
-* **YouTube Integration**: Download audio from videos automatically
-* **Transcription**: Converts audio to text using Whisper
-* **AI Quiz Generation**: Uses Google Gemini to generate exactly 10 multiple-choice questions per video
-* **Quiz Management**: Users can view, update, and delete their quizzes
+* **User Authentication**: Registration, login, logout, JWT-based authentication stored in HTTP-only cookies, token refresh
+* **YouTube Integration**: Automatic audio extraction from YouTube videos
+* **Transcription**: Audio-to-text conversion using OpenAI Whisper
+* **AI Quiz Generation**: Generates exactly 10 multiple-choice questions per video using Google Gemini
+* **Quiz Management**: Create, view, update, and delete quizzes
 * **REST API**: Built with Django REST Framework
 
 ---
 
 ## Installation
 
+Clone the repository and set up a virtual environment:
+
 ```bash
-git clone <repository-url>
-cd <project-folder>
+git clone https://github.com/<your-username>/ai-powered-quiz-generator.git
+cd ai-powered-quiz-generator
 python -m venv env
 ```
 
@@ -33,8 +34,10 @@ python -m venv env
 source env/bin/activate
 
 # Windows
-source env/Scripts/activate
+env\Scripts\activate
 ```
+
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -44,76 +47,50 @@ pip install -r requirements.txt
 
 ## Environment Variables
 
-This project uses environment variables for sensitive configuration such as API keys.
+This project uses environment variables for configuration. A template is provided.
 
-### Setup
-
-1. Copy the environment template:
 ```bash
 cp .env.template .env
+```
+
+### Required Variables
+
+```env
+DJANGO_SECRET_KEY=
+GOOGLE_GENAI_API_KEY=
+```
+
+### Frontend / CORS Configuration
+
+If your frontend runs on a different port (e.g. `3000`, `5173`), update the following variable in your `.env` file:
+
+```env
+FRONTEND_URLS=http://localhost:3000
+```
+
+> Do **not** commit `.env` files.
 
 ---
 
-## VS Code Setup (Important)
+## VS Code Setup (Optional)
 
-After cloning the repository and creating the virtual environment, **VS Code must be configured to use the correct Python interpreter**. Otherwise you may see warnings like:
+If VS Code shows import warnings (e.g. `Import "dotenv" could not be resolved`), ensure the correct Python interpreter is selected:
 
-```
-Import "dotenv" could not be resolved
-```
-
-### Fix
-
-1. Open the Command Palette:
-
-   * `Ctrl + Shift + P` (Windows / Linux)
-   * `Cmd + Shift + P` (macOS)
-
-2. Select:
-
-   ```
-   Python: Select Interpreter
-   ```
-
+1. Open the Command Palette (`Ctrl + Shift + P` / `Cmd + Shift + P`)
+2. Select **Python: Select Interpreter**
 3. Choose:
 
    * `env/Scripts/python.exe` (Windows)
    * `env/bin/python` (macOS / Linux)
-
-4. Reload VS Code:
-
-   ```
-   Reload Window
-   ```
-
-> If the server runs correctly but VS Code shows import warnings, the issue is almost always an incorrect interpreter selection.
-
----
-
-## Environment Variable Example
-
-You may optionally create an example file for contributors:
-
-```env
-GOOGLE_GENAI_API_KEY=
-```
-
-Each developer must provide their own API key.
-
----
-
-## Notes for Contributors
-
-* Do **not** commit `.env` files
-* Make sure your virtual environment is activated before running commands
-* Heavy AI dependencies (Torch, Whisper) may take several minutes to install on first setup
+4. Reload the window
 
 ---
 
 ## Database Setup & Run Server
 
+All migrations are included in the repository.
+
 ```bash
-python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
@@ -125,7 +102,7 @@ python manage.py runserver
 
 | Endpoint              | Method           | Description                        |
 | --------------------- | ---------------- | ---------------------------------- |
-| `/api/register/`      | POST             | Register new user                  |
+| `/api/register/`      | POST             | Register a new user                |
 | `/api/login/`         | POST             | Login and set JWT cookies          |
 | `/api/logout/`        | POST             | Logout user and clear cookies      |
 | `/api/token/refresh/` | POST             | Refresh JWT access token           |
@@ -137,7 +114,7 @@ python manage.py runserver
 
 ## Project Structure
 
-```
+```text
 auth_app/
 ├── api/
 │   ├── views.py
@@ -171,3 +148,17 @@ quiz_app/
 ├── admin.py
 ├── ...
 ```
+
+---
+
+## Notes for Contributors
+
+* Do **not** commit `.env` files
+* Ensure the virtual environment is activated before running commands
+* Initial installation of AI-related dependencies (Torch, Whisper) may take several minutes
+
+---
+
+## License
+
+This project is intended for educational and demonstration purposes.

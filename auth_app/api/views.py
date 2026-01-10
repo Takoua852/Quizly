@@ -90,15 +90,20 @@ class CookieLoginView(TokenObtainPairView):
         serializer.is_valid(raise_exception=True)
         refresh = serializer.validated_data["refresh"]
         access = serializer.validated_data["access"]
+        
+        user = serializer.user
 
         response = Response(
-            {"detail": "Login successfully!",
-             "user": {
-                 "id":  serializer.user.id,
-                 "username": serializer.user.username,
-                 "email": serializer.user.email,
-             }
-             }, status=status.HTTP_200_OK)
+            {
+                "detail": "Login successful",
+                "user": {
+                    "id": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
 
         response.set_cookie(
             key="access_token",
