@@ -59,7 +59,13 @@ cp .env.template .env
 DJANGO_SECRET_KEY=
 GOOGLE_GENAI_API_KEY=
 ```
+To generate a new key, run:
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
 
+> To obtain a Google GenAI API key, visit the [Google Cloud Console](https://console.cloud.google.com/ai) and create a key.  
+> Make sure each contributor uses their **own API key**.
 ### Frontend / CORS Configuration
 
 If your frontend runs on a different port (e.g. `3000`, `5173`), update the following variable in your `.env` file:
@@ -161,4 +167,6 @@ quiz_app/
 
 ## License
 
-This project is intended for educational and demonstration purposes.
+This project is licensed under the [MIT License](./LICENSE).
+
+See the LICENSE file for more details.
