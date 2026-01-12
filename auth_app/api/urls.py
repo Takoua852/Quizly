@@ -1,18 +1,5 @@
-"""
-authentication_urls.py
+"""URL routing for user authentication endpoints."""
 
-Defines URL routing for user authentication endpoints including
-registration, login with JWT cookies, token refresh, and logout.
-
-Endpoints:
-    - POST /register/          : Register a new user
-    - POST /login/             : Login a user and set JWT access/refresh cookies
-    - POST /logout/            : Logout a user and delete JWT cookies
-    - POST /token/refresh/     : Refresh JWT access token using refresh token from cookie
-
-Usage:
-    Include this module in the project's main urls.py using Django's `include`.
-"""
 from django.urls import path
 from .views import RegistrationView,CookieLogoutView,CookieLoginView,CookieTokenRefreshView
 

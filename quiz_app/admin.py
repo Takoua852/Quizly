@@ -14,12 +14,12 @@ class QuizAdmin(admin.ModelAdmin):
     search_fields = ("title", "user__username", "user__email")
     list_filter = ("created_at", "updated_at")
     inlines = [QuestionInline]
+    readonly_fields = ("created_at", "updated_at") 
 
     def get_readonly_fields(self, request, obj=None):
-        if obj:  # Editing an existing object
-            return ("user", "video_url", "created_at", "updated_at")
-        return ()
-    readonly_fields = ("created_at", "updated_at")
+        if obj:
+            return ("user", "video_url") + self.readonly_fields
+        return self.readonly_fields
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
@@ -31,4 +31,4 @@ class QuestionAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj:  # Editing an existing object
             return ("quiz", "question_title", "question_options", "answer", "created_at", "updated_at")
-        return ()
+        return self.readonly_fields

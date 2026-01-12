@@ -25,27 +25,13 @@ from .authentication import CookieJWTAuthentication
 
 
 class RegistrationView(APIView):
-    """
-    API endpoint to register a new user.
+    """API endpoint to register a new user."""
 
-    Permissions:
-        - AllowAny
-
-    HTTP methods:
-        POST: Creates a new user from provided registration data.
-    """
     permission_classes = [AllowAny]
 
     def post(self, request):
-        """
-        Handle POST request to register a new user.
+        """Create a new user from registration data."""
 
-        Args:
-            request (Request): The HTTP request containing user data.
-
-        Returns:
-            Response: 201 Created if successful, 400 Bad Request with validation errors otherwise.
-        """
         serializer = RegistrationSerializer(data=request.data)
 
         data = {}
@@ -60,32 +46,15 @@ class RegistrationView(APIView):
 
 
 class CookieLoginView(TokenObtainPairView):
-    """
-    API endpoint to login a user and issue JWT tokens via cookies.
+    """API endpoint to login a user and issue JWT tokens via cookies."""
 
-    Permissions:
-        - AllowAny
-
-    Authentication:
-        - CookieJWTAuthentication
-
-    HTTP methods:
-        POST: Returns user info and sets access/refresh JWT tokens as HTTP-only cookies.
-    """
     permission_classes = [AllowAny]
     serializer_class = CustomTokenObtainPairSerializer
     authentication_classes = [CookieJWTAuthentication]
 
     def post(self, request, *args, **kwargs):
-        """
-        Handle POST request for login.
+        """Authenticate user and set access/refresh JWT cookies."""
 
-        Args:
-            request (Request): The HTTP request containing username/password.
-
-        Returns:
-            Response: 200 OK with user info if login successful; sets JWT cookies.
-        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         refresh = serializer.validated_data["refresh"]
@@ -124,20 +93,12 @@ class CookieLoginView(TokenObtainPairView):
 
 
 class CookieTokenRefreshView(TokenRefreshView):
-    """
-    API endpoint to refresh the JWT access token using the refresh token stored in cookies.
+    """Refresh JWT access token using the refresh token from cookies."""
 
-    HTTP methods:
-        POST: Refreshes the access token and updates the cookie.
-    """
 
     def post(self, request, *args, **kwargs):
-        """
-        Handle POST request to refresh JWT access token.
+        """Refresh the access token and update the cookie."""
 
-        Returns:
-            Response: 200 OK with new access token, or 400/401 if refresh token is missing or invalid.
-        """
         refresh_token = request.COOKIES.get("refresh_token")
         if not refresh_token:
             return Response({"detail": "Refresh token not found!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -164,24 +125,13 @@ class CookieTokenRefreshView(TokenRefreshView):
 
 
 class CookieLogoutView(APIView):
-    """
-    API endpoint to logout a user by deleting JWT cookies.
+    """Logout a user by deleting JWT cookies."""
 
-    Permissions:
-        - IsAuthenticated
-
-    HTTP methods:
-        POST: Deletes access and refresh cookies to logout the user.
-    """
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        """
-        Handle POST request to logout a user.
+        """Delete access and refresh JWT cookies."""
 
-        Returns:
-            Response: 200 OK if cookies deleted successfully, 500 if an error occurs.
-        """
         try:
             refresh_token = request.COOKIES.get("refresh_token")
             if refresh_token:

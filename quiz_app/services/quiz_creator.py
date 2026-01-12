@@ -6,65 +6,46 @@ from .gemini import GeminiQuizService
 from django.db import transaction
 
 class QuizCreator:
-    """
-    High-level service class to orchestrate the creation of a Quiz
-    from a YouTube video.
-
-    Responsibilities:
-    - Validate and normalize YouTube URLs
-    - Download and transcribe video audio
-    - Generate quiz questions using Gemini
-    - Persist Quiz and associated Questions in the database
-
-    Example usage:
-        quiz = QuizCreator.create(user, "https://youtu.be/example")
-    """
+    """Orchestrates creating a Quiz from a YouTube video."""
 
     @staticmethod
     def create(user, youtube_url: str) -> Quiz:
-
-        """
-        Create a Quiz from a YouTube video URL.
-
-        Workflow:
-        1. Extract video ID from the URL
-        2. Create a Quiz instance with placeholder title/description
-        3. Download audio using YouTubeService
-        4. Transcribe audio using TranscriptionService
-        5. Generate quiz questions using GeminiQuizService
-        6. Save questions and update Quiz title/description
-
-        Args:
-            user (User): Django user who owns the quiz.
-            youtube_url (str): Full YouTube video URL.
-
-        Returns:
-            Quiz: The created Quiz instance with all questions.
-
-        Raises:
-            RuntimeError: If the YouTube URL is invalid or
-                          quiz generation fails at any stage.
-        """
-        
-        video_id = extract_video_id(youtube_url)
-        if not video_id:
-            raise RuntimeError("Ungültige YouTube-URL")
-
+        video_id = QuizCreator._extract_video_id(youtube_url)
         clean_url = f"https://www.youtube.com/watch?v={video_id}"
 
+        quiz = QuizCreator._create_quiz_placeholder(user, clean_url)
+        transcript, info = QuizCreator._download_and_transcribe(clean_url)
+        questions = GeminiQuizService.generate_questions(transcript)
+        QuizCreator._save_questions(quiz, questions)
+        QuizCreator._update_quiz_info(quiz, info)
+
+        return quiz
+
+    @staticmethod
+    def _extract_video_id(url: str) -> str:
+        video_id = extract_video_id(url)
+        if not video_id:
+            raise RuntimeError("Ungültige YouTube-URL")
+        return video_id
+
+    @staticmethod
+    def _create_quiz_placeholder(user, url) -> Quiz:
         with transaction.atomic():
-     
-            quiz = Quiz.objects.create(
+            return Quiz.objects.create(
                 user=user,
                 title="Quiz wird erstellt...",
                 description="Transkription läuft...",
-                video_url=clean_url
+                video_url=url
             )
 
-        audio, info = YouTubeService.download_audio(clean_url)
+    @staticmethod
+    def _download_and_transcribe(url):
+        audio, info = YouTubeService.download_audio(url)
         transcript = TranscriptionService.transcribe(audio)
-        questions = GeminiQuizService.generate_questions(transcript)
+        return transcript, info
 
+    @staticmethod
+    def _save_questions(quiz, questions):
         for q in questions:
             Question.objects.create(
                 quiz=quiz,
@@ -73,8 +54,9 @@ class QuizCreator:
                 answer=q["answer"]
             )
 
+    @staticmethod
+    def _update_quiz_info(quiz, info):
         quiz.title = info.get("title", "Neues Quiz")
-        quiz.description = info.get("description", "")
+        quiz.description = ""
         quiz.save()
 
-        return quiz

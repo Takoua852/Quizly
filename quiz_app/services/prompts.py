@@ -1,19 +1,6 @@
 def build_quiz_prompt(transcript: str) -> str:
-    """
-   Build a strict prompt for the Gemini language model that enforces
-   structured JSON output for quiz generation.
+    """Build a JSON-based prompt for Gemini to generate 10 multiple-choice quiz questions."""
 
-   The prompt instructs the model to:
-   - Generate exactly 10 quiz questions
-   - Use multiple-choice format with 4 options
-   - Return raw JSON without additional text
-
-   Args:
-       transcript (str): Transcript text used as the knowledge source.
-
-   Returns:
-       str: Fully formatted prompt string for the LLM.
-   """
 
     return f"""
 You are a system that generates quiz questions strictly as JSON.

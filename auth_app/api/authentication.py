@@ -14,30 +14,11 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 class CookieJWTAuthentication(JWTAuthentication):
-    """
-    Custom JWT authentication class that reads the JWT access token from cookies.
+    """Authenticate users using the JWT access token stored in cookies."""
 
-    Behavior:
-        - Looks for the 'access_token' cookie in the incoming request.
-        - Validates the token using SimpleJWT's built-in methods.
-        - Returns a tuple of (user, validated_token) if authentication succeeds.
-        - Returns None if the cookie is missing.
-
-    Usage:
-        Add this class to the `authentication_classes` of a DRF view or viewset:
-            authentication_classes = [CookieJWTAuthentication]
-    """
     def authenticate(self, request):
-        """
-        Authenticate the request using the 'access_token' cookie.
+        """Return (user, token) from the 'access_token' cookie or None."""
 
-        Args:
-            request (Request): The incoming HTTP request.
-
-        Returns:
-            tuple: (user, validated_token) if authentication succeeds.
-            None: If no token is found in cookies.
-        """
         raw_token = request.COOKIES.get("access_token")
 
         if raw_token is None:

@@ -4,39 +4,13 @@ import uuid
 import os
 
 class YouTubeService:
-    """
-    Service class for downloading audio from YouTube videos.
+    """Service to download audio from YouTube videos as MP3 with metadata."""
 
-    This class provides functionality to:
-    - Download audio from a given YouTube URL
-    - Convert the audio to MP3 format
-    - Return the local file path and video metadata
-
-    Example usage:
-        audio_file, info = YouTubeService.download_audio("https://youtu.be/...")
-    """
 
     @staticmethod
     def download_audio(url: str) -> tuple[str, dict]:
-        """
-        Download the audio from a YouTube video as MP3.
+        """Download a YouTube video's audio as MP3 and return file path and metadata."""
 
-        The audio is downloaded to a temporary directory with a
-        unique filename. Only the first video is processed if the
-        URL points to a playlist.
-
-        Args:
-            url (str): The full YouTube video URL to download.
-
-        Returns:
-            tuple[str, dict]: A tuple containing:
-                - The local path to the downloaded MP3 file
-                - The metadata dictionary returned by yt_dlp
-
-        Raises:
-            RuntimeError: If the audio file could not be downloaded
-                          or created.
-        """
         tmp_dir = tempfile.gettempdir()
         filename = os.path.join(tmp_dir, f"{uuid.uuid4()}.%(ext)s")
 

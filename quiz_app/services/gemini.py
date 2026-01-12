@@ -9,40 +9,13 @@ client = genai.Client(api_key=settings.GOOGLE_GENAI_API_KEY)
 
 
 class GeminiQuizService:
-    """
-      Service class responsible for generating quiz questions using
-      the Google Gemini language model.
+    """Service to generate 10 multiple-choice quiz questions from a transcript using Gemini."""
 
-      The service takes a transcript as input and attempts to generate
-      exactly 10 multiple-choice quiz questions that strictly follow
-      a predefined JSON schema.
-
-      Responsibilities:
-      - Build and send prompts to the Gemini API
-      - Retry generation on invalid or malformed responses
-      - Validate the generated quiz structure before returning data
-
-      Raises:
-          RuntimeError: If a valid quiz cannot be generated after
-                        the configured number of retries.
-      """
 
     @staticmethod
     def generate_questions(transcript: str, retries=5):
-        """
-        Generate quiz questions from a transcript using Gemini.
+        """Generate validated quiz questions from transcript text."""
 
-        Args:
-            transcript (str): Full transcript text extracted from a video.
-            retries (int): Number of retry attempts if the response
-                           is invalid or incomplete.
-
-        Returns:
-            list: A list of 10 validated quiz question dictionaries.
-
-        Raises:
-            RuntimeError: If Gemini fails to produce a valid result.
-        """
         prompt = build_quiz_prompt(transcript)
 
         for _ in range(retries):

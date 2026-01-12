@@ -1,14 +1,3 @@
-"""
-authentication_serializers.py
-
-Defines serializers for user registration and JWT authentication.
-
-Serializers:
-    - RegistrationSerializer: Handles user creation with password confirmation
-      and email uniqueness validation.
-    - CustomTokenObtainPairSerializer: Extends SimpleJWT's TokenObtainPairSerializer
-      to validate username and password and return JWT tokens.
-"""
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User
@@ -19,24 +8,8 @@ User = get_user_model()
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    """
-    Serializer for registering a new user.
-
-    Fields:
-        - username: Required, unique identifier for the user
-        - password: Required, write-only
-        - confirmed_password: Required, write-only, must match password
-        - email: Required, must be unique
-
-    Validations:
-        - Password and confirmed_password must match
-        - Email must not already exist in the database
-
-    Usage:
-        serializer = RegistrationSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-    """
+    """Register a new user with password confirmation and unique email."""
+    
     confirmed_password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -63,12 +36,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return value
 
     def save(self):
-        """
-        Create and save a new User instance with a hashed password.
+        """Create a new User instance with hashed password."""
 
-        Returns:
-            User: The newly created user instance
-        """
         pw = self.validated_data['password']
 
         account = User(
@@ -78,20 +47,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return account
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """
-    Custom serializer for obtaining JWT token pair (access and refresh).
-
-    Extends TokenObtainPairSerializer to:
-        - Validate username exists
-        - Validate password is correct
-        - Return JWT tokens if authentication succeeds
-
-    Usage:
-        serializer = CustomTokenObtainPairSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        tokens = serializer.validated_data
-    """
-
+    """Obtain JWT token pair (access and refresh) after validating credentials."""
 
     def validate(self, attrs):
         username = attrs.get("username")

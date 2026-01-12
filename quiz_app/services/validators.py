@@ -1,19 +1,6 @@
 def is_valid_quiz_payload(data) -> bool:
-    """
-    Validate the structure and content of generated quiz data.
+    """Check if quiz data is valid: list of 10 dicts with 4 unique options and a correct answer."""
 
-    Validation rules:
-    - Data must be a list of exactly 10 items
-    - Each item must be a dictionary
-    - Each question must contain exactly 4 unique options
-    - The correct answer must match one of the options
-
-    Args:
-        data (list): Parsed JSON data returned by the LLM.
-
-    Returns:
-        bool: True if the quiz data is valid, otherwise False.
-    """
     if not isinstance(data, list) or len(data) != 10:
         return False
 
